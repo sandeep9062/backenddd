@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
       ],
     },
 
-    //googleId: String,
+    googleId: String,
 
     password: {
       type: String,
@@ -33,10 +33,13 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["patient", "admin"],
-      default: "patient",
+      enum: ["client", "admin", `retailer`],
+      default: "client",
     },
 
+    image: {
+      type: String,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

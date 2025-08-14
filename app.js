@@ -6,24 +6,9 @@ import connectDB from "./config/db.js";
 
 // importing routes
 
-import contactRoutes from "./routes/contactRoutes.js";
-import backgroundImageRoutes from "./routes/backgroundImageRoutes.js";
-import businessContactRoutes from "./routes/businessContactRoutes.js";
-import serviceRoutes from "./routes/serviceRoutes.js";
-import consultationRoutes from "./routes/consultationRoutes.js";
-import contentRoutes from "./routes/contentRoutes.js";
-import globalSettingsRoutes from "./routes/globalSettingsRoutes.js";
-import menuRoutes from "./routes/menuRoutes.js";
 import siteSettingsRoutes from "./routes/siteSettingsRoutes.js";
-import bloodTestRoutes from "./routes/bloodTestRoutes.js";
-import diagnosticRoutes from "./routes/diagnosticCentreRoutes.js";
-import sliderImageRoutes from "./routes/sliderImageRoutes.js";
-import offerRoutes from "./routes/offerRoutes.js";
-import productRoutes from "./routes/productRoutes.js";
-import thyroidRoutes from "./routes/thyroidRoutes.js";
-import thyrocareProfileRoutes from "./routes/thyrocareProfileRoutes.js";
-
-
+import websiteImageRoutes from "./routes/websiteImageRoutes.js";
+import uniformRoutes from "./routes/uniformRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
@@ -43,28 +28,11 @@ app.get("/", (req, res) => {
 });
 
 // API routes
-app.use("/api/user", userRoutes);
 
-
-
-app.use("/api/contact", contactRoutes);
-app.use("/api/consult", consultationRoutes);
-app.use("/api/service", serviceRoutes);
-app.use("/api/background-images", backgroundImageRoutes);
-app.use("/api/business-contact", businessContactRoutes);
-app.use("/api/content", contentRoutes);
-app.use("/api/settings", globalSettingsRoutes);
-app.use("/api/menu", menuRoutes);
-
+app.use("/api/users", userRoutes);
+app.use("/api/website-images", websiteImageRoutes);
 app.use("/api/site-settings", siteSettingsRoutes);
-app.use("/api/blood-tests", bloodTestRoutes);
-app.use("/api/centres", diagnosticRoutes);
-app.use("/api/sliders", sliderImageRoutes);
-app.use("/api/offers", offerRoutes);
-app.use("/api/products", productRoutes);
-app.use("/api/thyroid-packages", thyroidRoutes);
-app.use("/api/thyrocare-profile", thyrocareProfileRoutes);
-
+app.use("/api/uniforms", uniformRoutes);
 
 // Start server
 app.listen(PORT, () => {

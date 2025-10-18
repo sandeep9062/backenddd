@@ -1,4 +1,4 @@
-import DiagnosticLabs from "../models/diagnosticLabs.js";
+import DiagnosticLabs from "../models/DiagnosticLabs.js";
 
 // ✅ Add a new Diagnostic Lab
 export const addDiagnosticLab = async (req, res) => {

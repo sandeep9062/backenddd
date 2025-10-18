@@ -25,6 +25,14 @@ const siteSettingsSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
+    googleMapUrl: {
+      type: String,
+      required: true,
+      trim: true,
+      match: [/^https?:\/\//, "Invalid Map URL"],
+    },
+
     branchOffice: {
       type: String,
       required: true,
@@ -36,6 +44,13 @@ const siteSettingsSchema = new mongoose.Schema(
       trim: true,
       match: [/^\+?\d{7,15}$/, "Invalid contact number"],
     },
+    whatsAppNo: {
+      type: String,
+      required: true,
+      trim: true,
+      match: [/^\+?\d{7,15}$/, "Invalid whatsApp number"],
+    },
+
     contactNo2: {
       type: String,
       trim: true,
@@ -63,35 +78,55 @@ const siteSettingsSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    logoUrl: {
+
+    // 🔹 Branding & Media
+    logoUrl: { type: String, default: "", trim: true },
+    bannerUrl: { type: String, default: "", trim: true },
+    favicon: { type: String, default: "", trim: true },
+
+    // 🔹 Stats / Achievements
+    clientsServed: { type: Number, default: 0 },
+    projectsCompleted: { type: Number, default: 0 },
+    industriesServed: { type: Number, default: 0 },
+    aiIntegrations: { type: Number, default: 0 },
+    countriesReached: { type: Number, default: 0 },
+    foundedIn: { type: Number }, // e.g. 2015
+    SAASProducts: { type: Number, default: 0 },
+
+    // 🔹 Company Info
+    language: { type: String, trim: true }, // e.g. English, Hindi
+    country: { type: String, trim: true }, // e.g. India, USA
+
+    // 🔹 Social Media
+    linkedin: {
       type: String,
-      default: "",
       trim: true,
+      match: [/^https?:\/\//, "Invalid LinkedIn URL"],
     },
-    bannerUrl: {
+    pinterest: {
       type: String,
-      default: "",
       trim: true,
+      match: [/^https?:\/\//, "Invalid Pinterest URL"],
     },
-    favicon: {
+    twitter: {
       type: String,
-      default: "",
       trim: true,
+      match: [/^https?:\/\//, "Invalid Twitter URL"],
     },
-    facebookUrl: {
+    github: {
+      type: String,
+      trim: true,
+      match: [/^https?:\/\//, "Invalid GitHub URL"],
+    },
+    facebook: {
       type: String,
       trim: true,
       match: [/^https?:\/\//, "Invalid Facebook URL"],
     },
-    instagramUrl: {
+    instagram: {
       type: String,
       trim: true,
       match: [/^https?:\/\//, "Invalid Instagram URL"],
-    },
-    twitterUrl: {
-      type: String,
-      trim: true,
-      match: [/^https?:\/\//, "Invalid Twitter URL"],
     },
     youtubeUrl: {
       type: String,

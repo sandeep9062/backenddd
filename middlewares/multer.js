@@ -27,7 +27,7 @@ const storage = new CloudinaryStorage({
     }
 
     return {
-      folder: "consultation_files",
+      folder: "DentalTourism",
       resource_type: fileExtension === "pdf" ? "raw" : "image",
       format: fileExtension,
       public_id: `${Date.now()}-${file.originalname.split(".")[0]}`,
@@ -38,7 +38,7 @@ const storage = new CloudinaryStorage({
 // ✅ Create multer upload middleware
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // Optional: 10MB limit
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
   fileFilter: (req, file, cb) => {
     const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "application/pdf"];
     if (allowedTypes.includes(file.mimetype)) {

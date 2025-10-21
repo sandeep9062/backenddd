@@ -6,7 +6,6 @@ const clinicSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      unique: true, // one profile per dentist
     },
     img: { type: String },
     name: { type: String, required: true, trim: true },

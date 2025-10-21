@@ -49,6 +49,8 @@ app.use(
       "http://localhost:3000",
       "http://localhost:3001",
       "https://frontenddd-sepia.vercel.app",
+
+      "https://dashboarddd-nu.vercel.app",
     ],
     credentials: true,
   })

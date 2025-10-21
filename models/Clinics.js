@@ -15,7 +15,7 @@ const clinicSchema = new mongoose.Schema(
     problems: { type: [String], required: true },
     rating: { type: Number, default: 0, min: 0, max: 5 },
     bookUrl: { type: String, default: "#" },
-    website: { type: String },
+    website: { type: String },  isActive: { type: Boolean, default: true },
     whatsapp: { type: String },
     mapUrl: { type: String },
     isActive: { type: Boolean, default: true },

@@ -16,8 +16,8 @@ const dentistProfileSchema = new mongoose.Schema({
   certifications: [String],
   clinicAddress: String,
   about: String,
-  image: String,
-
+  image: String,  isActive: { type: Boolean, default: true },
+  isActive: { type: Boolean, default: true },
   gradCollege: { type: String, required: true },
   gradYear: { type: String, required: true },
   gradReg: { type: String, required: true },

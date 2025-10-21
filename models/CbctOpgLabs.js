@@ -7,6 +7,7 @@ const clinicSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    isActive: { type: Boolean, default: true },
     img: { type: String, required: true },
     state: { type: String, required: true },
     name: { type: String, required: true, trim: true },

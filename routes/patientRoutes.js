@@ -1,21 +1,10 @@
-import express from 'express';
-import { registerPatient, loginPatient, googleLogin, forgotPassword, resetPassword } from '../controllers/patientController.js';
+import express from "express";
+import { getAllPatients } from "../controllers/patientController.js";
 
 const router = express.Router();
 
-// Patient Registration Route
-router.post('/register', registerPatient);
+// get all patients
 
-// Patient Login Route
-router.post('/login', loginPatient);
-
-// Google Login Route
-router.post('/google-login', googleLogin);
-
-// Forgot Password Route
-router.post('/forgot-password', forgotPassword);
-
-// Reset Password Route
-router.post('/reset-password/:token', resetPassword);
+router.get("/", getAllPatients);
 
 export default router;

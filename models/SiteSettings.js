@@ -84,15 +84,6 @@ const siteSettingsSchema = new mongoose.Schema(
     bannerUrl: { type: String, default: "", trim: true },
     favicon: { type: String, default: "", trim: true },
 
-    // 🔹 Stats / Achievements
-    clientsServed: { type: Number, default: 0 },
-    projectsCompleted: { type: Number, default: 0 },
-    industriesServed: { type: Number, default: 0 },
-    aiIntegrations: { type: Number, default: 0 },
-    countriesReached: { type: Number, default: 0 },
-    foundedIn: { type: Number }, // e.g. 2015
-    SAASProducts: { type: Number, default: 0 },
-
     // 🔹 Company Info
     language: { type: String, trim: true }, // e.g. English, Hindi
     country: { type: String, trim: true }, // e.g. India, USA

@@ -161,4 +161,23 @@ router.get("/", async (req, res) => {
   }
 });
 
+// ✅ Toggle user status
+router.put("/:id/toggle", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.isActive = req.body.isActive;
+    await user.save();
+
+    res.json(user);
+  } catch (error) {
+    console.error("Error toggling user status:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
 export default router;

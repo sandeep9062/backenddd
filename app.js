@@ -28,6 +28,7 @@ import diagnosticLabRoutes from "./routes/diagnosticLabRoutes.js";
 
 import clinicRoutes from "./routes/clinicRoutes.js";
 import dentistRoutes from "./routes/dentistRoutes.js";
+import patientRoutes from "./routes/patientRoutes.js";
 connectDB();
 
 const app = express();
@@ -83,6 +84,7 @@ app.use("/api/v1/fix-my-teeth", fixMyTeethRoutes);
 app.use("/pharma-brand", pharmaBrandRoutes);
 
 app.use("/api/v1/dentists", dentistRoutes);
+app.use("/api/v1/patients", patientRoutes);
 
 // Start server
 app.listen(PORT, () => {

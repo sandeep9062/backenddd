@@ -88,19 +88,53 @@ export const updateClinic = async (req, res) => {
   try {
     const clinic = await Clinic.findById(req.params.id);
     if (!clinic) {
-      return res.status(404).json({ success: false, message: 'Clinic not found' });
+      return res.status(404).json({ success: false, message: "Clinic not found" });
     }
-    if (clinic.user.toString() !== req.user._id.toString()) {
-      return res.status(401).json({ success: false, message: 'User not authorized' });
+
+    // Authorization check: User must own the clinic or be an admin
+    if (
+      clinic.user.toString() !== req.user._id.toString() &&
+      req.user.role !== "admin"
+    ) {
+      return res
+        .status(401)
+        .json({ success: false, message: "User not authorized" });
     }
-    const updateData = req.body;
+
+    const updateData = { ...req.body };
+
+    // If an image file is uploaded, add its path to the update data
     if (req.file) {
       updateData.img = req.file.path;
+    } else {
+      // If no new file is uploaded, don't try to update the image with a URL string
+      delete updateData.img;
     }
+
+    // Handle boolean conversion for isActive
+    if (updateData.isActive === 'true') {
+      updateData.isActive = true;
+    } else if (updateData.isActive === 'false') {
+      updateData.isActive = false;
+    }
+
+    // The 'user' field should not be updated from the body, it's immutable.
+    // We delete it to prevent any accidental changes. The owner is already established.
+    delete updateData.user;
+    
+    // If 'problems' is sent as a JSON string, parse it into an array
+    if (typeof updateData.problems === 'string') {
+      try {
+        updateData.problems = JSON.parse(updateData.problems);
+      } catch (e) {
+        return res.status(400).json({ success: false, message: "Invalid format for problems" });
+      }
+    }
+
     const updatedClinic = await Clinic.findByIdAndUpdate(req.params.id, updateData, { new: true });
-    res.status(200).json({ success: true, message: 'Clinic updated successfully', data: updatedClinic });
+    res.status(200).json({ success: true, message: "Clinic updated successfully", data: updatedClinic });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to update clinic', error: error.message });
+    res.status(500).json({ success: false, message: "Failed to update clinic", error: error.message });
   }
 };
 

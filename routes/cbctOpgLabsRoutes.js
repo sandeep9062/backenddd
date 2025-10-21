@@ -15,7 +15,7 @@ const router = express.Router();
 router.post("/", protect, upload.single("img"), addCbctOpgLab);
 router.get("/", getAllCbctOpgLabs);
 router.get("/:id", getCbctOpgLabById);
-router.put("/:id", protect, upload.single("img"), updateCbctOpgLab);
+router.put("/:id", protect ,upload.single("img"), updateCbctOpgLab);
 router.delete("/:id", protect, checkAdmin, deleteCbctOpgLab);
 
 export default router;

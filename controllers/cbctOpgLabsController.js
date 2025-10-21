@@ -4,11 +4,22 @@ import CbctOpgLabs from "../models/CbctOpgLabs.js";
 // @route   POST /api/cbct-opg-labs
 export const addCbctOpgLab = async (req, res) => {
   try {
-    const { state, name, location, rating, bookUrl, website, whatsapp, mapUrl } = req.body;
+    const {
+      state,
+      name,
+      location,
+      rating,
+      bookUrl,
+      website,
+      whatsapp,
+      mapUrl,
+    } = req.body;
 
     const labExists = await CbctOpgLabs.findOne({ user: req.user._id });
     if (labExists) {
-      return res.status(400).json({ success: false, message: "You already have a lab profile." });
+      return res
+        .status(400)
+        .json({ success: false, message: "You already have a lab profile." });
     }
 
     const lab = new CbctOpgLabs({
@@ -25,10 +36,14 @@ export const addCbctOpgLab = async (req, res) => {
     });
 
     await lab.save();
-    res.status(201).json({ success: true, message: "Lab added successfully", lab });
+    res
+      .status(201)
+      .json({ success: true, message: "Lab added successfully", lab });
   } catch (error) {
     console.error("Error adding lab:", error);
-    res.status(500).json({ success: false, message: "Server error", error: error.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
   }
 };
 
@@ -47,8 +62,12 @@ export const getAllCbctOpgLabs = async (req, res) => {
 // @route   GET /api/cbct-opg-labs/:id
 export const getCbctOpgLabById = async (req, res) => {
   try {
-    const lab = await CbctOpgLabs.findById(req.params.id).populate("user", "name email");
-    if (!lab) return res.status(404).json({ success: false, message: "Lab not found" });
+    const lab = await CbctOpgLabs.findById(req.params.id).populate(
+      "user",
+      "name email"
+    );
+    if (!lab)
+      return res.status(404).json({ success: false, message: "Lab not found" });
     res.json({ success: true, lab });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -60,17 +79,28 @@ export const getCbctOpgLabById = async (req, res) => {
 export const updateCbctOpgLab = async (req, res) => {
   try {
     const lab = await CbctOpgLabs.findById(req.params.id);
-    if (!lab) return res.status(404).json({ success: false, message: "Lab not found" });
+    if (!lab)
+      return res.status(404).json({ success: false, message: "Lab not found" });
 
-    if (lab.user.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ success: false, message: "Not authorized to update this lab" });
+    if (req.user.role !== "admin") {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not authorized to update this lab" });
     }
 
     const updates = { ...req.body };
     if (req.file) updates.img = req.file.path;
 
-    const updatedLab = await CbctOpgLabs.findByIdAndUpdate(req.params.id, updates, { new: true });
-    res.json({ success: true, message: "Lab updated successfully", lab: updatedLab });
+    const updatedLab = await CbctOpgLabs.findByIdAndUpdate(
+      req.params.id,
+      updates,
+      { new: true }
+    );
+    res.json({
+      success: true,
+      message: "Lab updated successfully",
+      lab: updatedLab,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -81,10 +111,16 @@ export const updateCbctOpgLab = async (req, res) => {
 export const deleteCbctOpgLab = async (req, res) => {
   try {
     const lab = await CbctOpgLabs.findById(req.params.id);
-    if (!lab) return res.status(404).json({ success: false, message: "Lab not found" });
+    if (!lab)
+      return res.status(404).json({ success: false, message: "Lab not found" });
 
-    if (lab.user.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ success: false, message: "Not authorized" });
+    if (
+      req.user.role !== "admin" &&
+      lab.user.toString() !== req.user._id.toString()
+    ) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Not authorized" });
     }
 
     await lab.deleteOne();

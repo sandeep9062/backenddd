@@ -17,6 +17,43 @@ export const getDentistProfile = async (req, res) => {
   }
 };
 
+export const toggleDentistActive = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isActive } = req.body;
+
+    const dentist = await DentistProfile.findById(id);
+    if (!dentist) {
+      return res.status(404).json({ message: "Dentist not found" });
+    }
+
+    dentist.isActive = isActive;
+    await dentist.save();
+
+    res.json({ message: "Dentist status updated successfully", dentist });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+export const adminUpdateDentistProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    const dentist = await DentistProfile.findByIdAndUpdate(id, data, { new: true });
+    if (!dentist) {
+      return res.status(404).json({ message: "Dentist not found" });
+    }
+
+    res.json({ message: "Profile updated successfully", dentist });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 export const getDentistById = async (req, res) => {
   try {
     const dentist = await DentistProfile.findById(req.params.id).populate(

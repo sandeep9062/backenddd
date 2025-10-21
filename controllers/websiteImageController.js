@@ -83,10 +83,14 @@ export const updateImage = async (req, res) => {
         await cloudinary.uploader.destroy(oldImage.publicId);
       }
 
-      updateData.publicId = req.file.filename;
-      updateData.url = req.file.path;
-      updateData.width = req.file.width;
-      updateData.height = req.file.height;
+      // Add new image details to the update object
+      updateData = {
+        ...updateData,
+        publicId: req.file.filename,
+        url: req.file.path,
+        width: req.file.width,
+        height: req.file.height,
+      };
     }
 
     // Generate filename based on new altText if provided

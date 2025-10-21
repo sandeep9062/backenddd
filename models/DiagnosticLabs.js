@@ -6,7 +6,7 @@ const diagnosticLabSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-    },
+    },isActive: { type: Boolean, default: true },
     img: { type: String, required: true },
     state: { type: String, required: true },
     name: { type: String, required: true, trim: true },

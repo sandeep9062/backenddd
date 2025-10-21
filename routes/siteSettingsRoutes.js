@@ -18,8 +18,8 @@ const brandingUpload = upload.fields([
 
 // Single-document CRUD
 router.get("/", getSiteSettings);
-router.post("/", protect, checkAdmin, createSiteSettings);
-router.put("/:id", protect, checkAdmin, updateSiteSettings);
+router.post("/", protect, checkAdmin, brandingUpload, createSiteSettings);
+router.put("/:id", protect, checkAdmin, brandingUpload, updateSiteSettings);
 router.delete("/:id", protect, checkAdmin, deleteSiteSettings);
 
 export default router;

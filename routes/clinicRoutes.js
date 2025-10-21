@@ -15,12 +15,7 @@ router.get("/", clinicController.getAllClinics);
 router.get("/:id", clinicController.getClinicById);
 
 // PUT - Update clinic
-router.put(
-  "/:id",
-  protect,
-  upload.single("image"),
-  clinicController.updateClinic
-);
+router.put("/:id", protect, upload.single("image"), clinicController.updateClinic);
 
 // DELETE - Delete clinic
 router.delete("/:id", protect, checkAdmin, clinicController.deleteClinic);

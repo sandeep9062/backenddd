@@ -63,3 +63,22 @@ export const submitEnquiry = async (req, res) => {
     });
   }
 };
+
+export const getEnquiries = async (req, res) => {
+  try {
+    const enquiries = await PopUpForm.find();
+    res.status(200).json(enquiries);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const deleteEnquiry = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await PopUpForm.findByIdAndDelete(id);
+    res.status(200).json({ message: "Enquiry deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

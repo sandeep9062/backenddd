@@ -155,3 +155,14 @@ export const deleteClinic = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to delete clinic', error: error.message });
   }
 };
+
+// @desc Get clinics by user
+// @route GET /api/clinics/user
+export const getClinicsByUser = async (req, res) => {
+  try {
+    const clinics = await Clinic.find({ user: req.user._id }).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, data: clinics });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to fetch clinics', error: error.message });
+  }
+};

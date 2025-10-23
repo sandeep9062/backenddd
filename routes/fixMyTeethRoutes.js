@@ -9,7 +9,7 @@ import {
 import upload from "../middlewares/multer.js";
 const router = express.Router();
 
-router.post("/", upload.array("photo", 5), submitFixMyTeethCase);
+router.post("/", upload.array("photo", 6), submitFixMyTeethCase);
 router.get("/", getFixMyTeethCases);
 router.get("/:id", getFixMyTeethCaseById);
 

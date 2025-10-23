@@ -8,7 +8,7 @@ const fixMyTeethSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true },
     teethProblems: { type: Object, required: true },
-    otherProblemText: { type: String },
+    otherProblemText: { type: String, required: true },
     selectedState: { type: String, required: true },
     photos: [{ type: String }],
   },

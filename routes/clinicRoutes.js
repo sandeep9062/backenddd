@@ -11,6 +11,9 @@ router.post("/", protect, upload.single("image"), clinicController.addClinic);
 // GET - Get all clinics
 router.get("/", clinicController.getAllClinics);
 
+// GET - Get clinics by user
+router.get("/user", protect, clinicController.getClinicsByUser);
+
 // GET - Get clinic by ID
 router.get("/:id", clinicController.getClinicById);
 

@@ -33,6 +33,9 @@ import patientRoutes from "./routes/patientRoutes.js";
 import planRoutes from "./routes/planRoutes.js";
 
 import paymentRoutes from "./routes/paymentRoutes.js";
+
+import popupformRoutes from "./routes/popUpFormRoutes.js";
+
 connectDB();
 
 const app = express();
@@ -92,6 +95,9 @@ app.use("/pharma-brand", pharmaBrandRoutes);
 app.use("/api/v1/dentists", dentistRoutes);
 app.use("/api/v1/patients", patientRoutes);
 app.use("/api/plans", planRoutes);
+
+app.use("/api/v1/popup-form", popupformRoutes);
+
 
 app.use("/api/payment", paymentRoutes);
 // Start server

@@ -1,4 +1,4 @@
-import PopUpForm from "../models/popUpForm.js";
+import PopUpForm from "../models/PopUpForm.js";
 import cloudinary from "cloudinary";
 
 

@@ -35,6 +35,7 @@ import planRoutes from "./routes/planRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 
 import popupformRoutes from "./routes/popUpFormRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
 
 connectDB();
 
@@ -95,9 +96,10 @@ app.use("/pharma-brand", pharmaBrandRoutes);
 app.use("/api/v1/dentists", dentistRoutes);
 app.use("/api/v1/patients", patientRoutes);
 app.use("/api/plans", planRoutes);
-
+app.use("/api/appointments", appointmentRoutes);
 app.use("/api/v1/popup-form", popupformRoutes);
 
+app.use("/api/v1/products", productRoutes);
 
 app.use("/api/payment", paymentRoutes);
 // Start server

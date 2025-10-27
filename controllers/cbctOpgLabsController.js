@@ -9,7 +9,7 @@ export const addCbctOpgLab = async (req, res) => {
       name,
       location,
       rating,
-      bookUrl,
+
       website,
       whatsapp,
       mapUrl,
@@ -29,7 +29,7 @@ export const addCbctOpgLab = async (req, res) => {
       name,
       location,
       rating: rating || 0,
-      bookUrl,
+  
       website,
       whatsapp,
       mapUrl,

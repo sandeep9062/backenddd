@@ -11,12 +11,14 @@ const clinicSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     location: { type: String, required: true },
     state: { type: String, required: true },
+    offers: { type: [String], required: true },
     problems: { type: [String], required: true },
     rating: { type: Number, default: 0, min: 0, max: 5 },
-    bookUrl: { type: String, default: "#" },
+
     website: { type: String },
     whatsapp: { type: String },
     mapUrl: { type: String },
+    appointmentCharges: Number,
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true }

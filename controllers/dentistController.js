@@ -42,7 +42,9 @@ export const adminUpdateDentistProfile = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
 
-    const dentist = await DentistProfile.findByIdAndUpdate(id, data, { new: true });
+    const dentist = await DentistProfile.findByIdAndUpdate(id, data, {
+      new: true,
+    });
     if (!dentist) {
       return res.status(404).json({ message: "Dentist not found" });
     }
@@ -124,7 +126,9 @@ export const updateDentistProfile = async (req, res) => {
       problems,
       specialization,
       experienceYears,
+      ratings,
       certifications,
+      consultationCharges,
       clinicAddress,
       states,
       about,
@@ -156,11 +160,13 @@ export const updateDentistProfile = async (req, res) => {
     profile.problems = problems.split(",");
     profile.specialization = specialization;
     profile.experienceYears = experienceYears;
+    profile.consultationCharges = consultationCharges;
     profile.certifications = certifications.split(",");
     profile.clinicAddress = clinicAddress;
     profile.states = states;
     profile.about = about;
     profile.image = image;
+    profile.ratings = ratings;
     profile.gradCollege = gradCollege;
     profile.gradYear = gradYear;
     profile.gradReg = gradReg;

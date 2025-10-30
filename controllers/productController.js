@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Product from "../models/Products.js";
 import asyncHandler from "express-async-handler"; // optional but helps handle async errors
 
@@ -51,6 +52,10 @@ export const getProducts = asyncHandler(async (req, res) => {
 // @access  Public
 // ==========================
 export const getProductById = asyncHandler(async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
   const product = await Product.findById(req.params.id);
 
   if (product) {
@@ -71,10 +76,10 @@ export const createProduct = asyncHandler(async (req, res) => {
     name,
     brand,
     category,
+    subcategory,
     description,
     composition,
     dosage,
-    prescriptionRequired,
     price,
     discountPrice,
     stockCount,
@@ -83,14 +88,33 @@ export const createProduct = asyncHandler(async (req, res) => {
     manufacturer,
     storageConditions,
     weight,
-    images,
     tags,
   } = req.body;
 
+  // Handle boolean conversion
+  const prescriptionRequired = req.body.prescriptionRequired === "true";
+  const isActive = req.body.isActive === "true";
+
+  // Handle image uploads
+  const images = req.files
+    ? req.files.map((file) => ({
+        url: file.path, // Assuming multer-storage-cloudinary is used
+        public_id: file.filename,
+      }))
+    : [];
+
+  // Handle tags - could be a single string or an array
+  let tagsArray = [];
+  if (tags) {
+    tagsArray = Array.isArray(tags) ? tags : tags.split(",").map((t) => t.trim());
+  }
+
   const product = new Product({
+    user: req.user._id,
     name,
     brand,
     category,
+    subcategory,
     description,
     composition,
     dosage,
@@ -104,7 +128,11 @@ export const createProduct = asyncHandler(async (req, res) => {
     storageConditions,
     weight,
     images,
-    tags,
+    tags: tagsArray,
+    isActive,
+    // Set default rating/reviews, assuming user is admin
+    rating: 0,
+    numReviews: 0,
   });
 
   const createdProduct = await product.save();
@@ -120,7 +148,50 @@ export const updateProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    Object.assign(product, req.body);
+    // Update fields from req.body
+    product.name = req.body.name || product.name;
+    product.brand = req.body.brand || product.brand;
+    product.category = req.body.category || product.category;
+    product.subcategory = req.body.subcategory || product.subcategory;
+    product.description = req.body.description || product.description;
+    product.composition = req.body.composition || product.composition;
+    product.dosage = req.body.dosage || product.dosage;
+    product.price = req.body.price || product.price;
+    product.discountPrice = req.body.discountPrice || product.discountPrice;
+    product.stockCount = req.body.stockCount || product.stockCount;
+    product.expiryDate = req.body.expiryDate || product.expiryDate;
+    product.manufacturingDate =
+      req.body.manufacturingDate || product.manufacturingDate;
+    product.manufacturer = req.body.manufacturer || product.manufacturer;
+    product.storageConditions =
+      req.body.storageConditions || product.storageConditions;
+    product.weight = req.body.weight || product.weight;
+
+    // Handle boolean conversion
+    if (req.body.prescriptionRequired !== undefined) {
+      product.prescriptionRequired = req.body.prescriptionRequired === "true";
+    }
+    if (req.body.isActive !== undefined) {
+      product.isActive = req.body.isActive === "true";
+    }
+
+    // Handle tags
+    if (req.body.tags) {
+      const { tags } = req.body;
+      product.tags = Array.isArray(tags)
+        ? tags
+        : tags.split(",").map((t) => t.trim());
+    }
+
+    // Handle image updates
+    if (req.files && req.files.length > 0) {
+      // Optional: Add logic here to delete old images from cloud storage
+      product.images = req.files.map((file) => ({
+        url: file.path,
+        public_id: file.filename,
+      }));
+    }
+
     const updatedProduct = await product.save();
     res.json(updatedProduct);
   } else {

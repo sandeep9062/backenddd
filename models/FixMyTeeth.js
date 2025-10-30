@@ -11,6 +11,15 @@ const fixMyTeethSchema = new mongoose.Schema(
     otherProblemText: { type: String, required: true },
     selectedState: { type: String, required: true },
     photos: [{ type: String }],
+
+status: {
+      type: String,
+      enum: ["Pending", "Seen", "Report Generated"],
+      default: "Pending",
+    },
+
+
+
   },
   { timestamps: true }
 );

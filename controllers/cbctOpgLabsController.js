@@ -38,7 +38,7 @@ export const addCbctOpgLab = async (req, res) => {
     await lab.save();
     res
       .status(201)
-      .json({ success: true, message: "Lab added successfully", lab });
+      .json({ success: true, message: "Lab added successfully", data: lab });
   } catch (error) {
     console.error("Error adding lab:", error);
     res
@@ -68,7 +68,7 @@ export const getCbctOpgLabById = async (req, res) => {
     );
     if (!lab)
       return res.status(404).json({ success: false, message: "Lab not found" });
-    res.json({ success: true, lab });
+    res.json({ success: true, data: lab });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -99,7 +99,7 @@ export const updateCbctOpgLab = async (req, res) => {
     res.json({
       success: true,
       message: "Lab updated successfully",
-      lab: updatedLab,
+      data: updatedLab,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

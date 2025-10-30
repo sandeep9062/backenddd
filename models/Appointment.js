@@ -13,7 +13,10 @@ const appointmentSchema = new mongoose.Schema(
     },
     clinicId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Clinic",
+      required: true,
+    },
+    serviceType: {
+      type: String,
       required: true,
     },
     clinicName: {

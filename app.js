@@ -29,7 +29,7 @@ import diagnosticLabRoutes from "./routes/diagnosticLabRoutes.js";
 import clinicRoutes from "./routes/clinicRoutes.js";
 import dentistRoutes from "./routes/dentistRoutes.js";
 import patientRoutes from "./routes/patientRoutes.js";
-
+import consultationRoutes from "./routes/consultationRoutes.js";
 import planRoutes from "./routes/planRoutes.js";
 
 import paymentRoutes from "./routes/paymentRoutes.js";
@@ -71,7 +71,7 @@ app.get("/", (req, res) => {
 
 // API routes
 
-app.use("/api/users", userRoutes);
+app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/website-images", websiteImageRoutes);
 app.use("/api/v1/site-settings", siteSettingsRoutes);
 
@@ -79,7 +79,7 @@ app.use("/api/v1/blogs", blogRoutes);
 
 app.use("/api/v1/clinics", clinicRoutes);
 app.use("/api/v1/cbct-opg-labs", cbctOpgLabsRoutes);
-app.use("/api/diagnostic-labs", diagnosticLabRoutes);
+app.use("/api/v1/diagnostic-labs", diagnosticLabRoutes); // corrected v1
 
 app.use("/api/v1/testimonials", testimonialRoutes);
 
@@ -89,6 +89,7 @@ app.use("/api/v1/support", supportRoutes);
 app.use("/api/v1/newsletter", NewsLetterRoutes);
 
 app.use("/api/v1/appointments", appointmentRoutes);
+
 app.use("/api/v1/fix-my-teeth", fixMyTeethRoutes);
 
 app.use("/pharma-brand", pharmaBrandRoutes);
@@ -97,9 +98,18 @@ app.use("/api/v1/dentists", dentistRoutes);
 app.use("/api/v1/patients", patientRoutes);
 app.use("/api/plans", planRoutes);
 app.use("/api/appointments", appointmentRoutes);
+app.use("/api/v1/consultations", consultationRoutes);
+
+
 app.use("/api/v1/popup-form", popupformRoutes);
 
 app.use("/api/v1/products", productRoutes);
+
+
+
+
+
+
 
 app.use("/api/payment", paymentRoutes);
 // Start server

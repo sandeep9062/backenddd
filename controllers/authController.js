@@ -25,7 +25,8 @@ export const registerUser = async (req, res) => {
 
     const user = await User.create({
       name,
-      email,phone,
+      email,
+      phone,
       password: hashedPassword,
       role,
     });
@@ -52,7 +53,10 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
 
     const token = generateToken(user);
-    res.status(200).json({ user, token, role: user.role });
+    const { _id, name, role, phone } = user;
+    res
+      .status(200)
+      .json({ user: { _id, name, email, role, phone }, token, role: user.role });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

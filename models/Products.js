@@ -1,7 +1,18 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
 
 const productSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
+    },
     name: {
       type: String,
       required: [true, "Product name is required"],
@@ -13,10 +24,12 @@ const productSchema = new mongoose.Schema(
       trim: true,
     },
 
+    // ✅ Updated: main category (broader type)
     category: {
       type: String,
       required: [true, "Category is required"],
       enum: [
+        // Existing categories
         "Tablets",
         "Capsules",
         "Syrups",
@@ -28,8 +41,23 @@ const productSchema = new mongoose.Schema(
         "Dental Care",
         "Medical Devices",
         "Other",
+        // New dental care product categories
+        "ToothBrushes",
+        "Toothpaste",
+        "MouthWash",
+        "Tounge Cleaner",
+        "Flossers",
+        "Gum Paints",
+        "Nicotine Tablets",
       ],
       default: "Other",
+    },
+
+    // ✅ Added: Subcategory (specific item under category)
+    subcategory: {
+      type: String,
+      trim: true,
+      default: "",
     },
 
     description: {
@@ -72,12 +100,10 @@ const productSchema = new mongoose.Schema(
 
     expiryDate: {
       type: Date,
-      required: false,
     },
 
     manufacturingDate: {
       type: Date,
-      required: false,
     },
 
     manufacturer: {
@@ -96,6 +122,7 @@ const productSchema = new mongoose.Schema(
       default: 0, // in grams
     },
 
+    // ✅ Cloudinary or static image storage
     images: [
       {
         url: { type: String, required: true },
@@ -103,10 +130,10 @@ const productSchema = new mongoose.Schema(
       },
     ],
 
-    // For related filters
+    // ✅ Tags for search/filtering
     tags: [{ type: String, trim: true }],
 
-    // For ratings & reviews
+    // ✅ Ratings
     rating: {
       type: Number,
       default: 0,
@@ -125,5 +152,13 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+productSchema.pre("save", function (next) {
+  if (this.isModified("name")) {
+    this.slug = slugify(this.name, { lower: true, strict: true });
+  }
+  next();
+});
+
+// ✅ Export model
 export default mongoose.models.Product ||
   mongoose.model("Product", productSchema);

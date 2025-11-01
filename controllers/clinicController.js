@@ -12,14 +12,18 @@ export const addClinic = async (req, res) => {
 
     let {
       name,
+      description,
       location,
       state,
       problems,
       offers,
+      specialities,
       rating,
       appointmentCharges,
+      noOfDoctors,
       website,
       whatsapp,
+      instagramId,
       mapUrl,
       isActive,
     } = req.body;
@@ -31,23 +35,32 @@ export const addClinic = async (req, res) => {
       problems = [problems];
     }
 
-    // Ensure 'offers' is an array
     if (!offers) {
       offers = [];
     } else if (typeof offers === "string") {
       offers = [offers];
     }
 
+    if (!specialities) {
+      specialities = [];
+    } else if (typeof specialities === "string") {
+      specialities = [specialities];
+    }
+
     const clinicData = {
       name,
+      description,
       location,
       state,
       problems: problems || [],
-      offers: offers,
+      offers: offers || [],
+      specialities: specialities || [],
       rating: Number(rating) || 0,
       appointmentCharges: Number(appointmentCharges) || 0,
+      noOfDoctors: Number(noOfDoctors) || 0,
       website,
       whatsapp,
+      instagramId,
       mapUrl,
       user: req.user._id,
     };
@@ -56,8 +69,8 @@ export const addClinic = async (req, res) => {
       clinicData.isActive = isActive === "true";
     }
 
-    if (req.file) {
-      clinicData.img = req.file.path;
+    if (req.files) {
+      clinicData.images = req.files.map((file) => file.path);
     }
 
     const newClinic = new Clinic(clinicData);
@@ -156,12 +169,12 @@ export const updateClinic = async (req, res) => {
 
     const updateData = { ...req.body };
 
-    // If an image file is uploaded, add its path to the update data
-    if (req.file) {
-      updateData.img = req.file.path;
+    // If image files are uploaded, add their paths to the update data
+    if (req.files && req.files.length > 0) {
+      updateData.images = req.files.map((file) => file.path);
     } else {
-      // If no new file is uploaded, don't try to update the image with a URL string
-      delete updateData.img;
+      // If no new files are uploaded, don't try to update the images with a URL string
+      delete updateData.images;
     }
 
     // Handle boolean conversion for isActive
@@ -193,6 +206,16 @@ export const updateClinic = async (req, res) => {
         return res
           .status(400)
           .json({ success: false, message: "Invalid format for offers" });
+      }
+    }
+
+    if (typeof updateData.specialities === "string") {
+      try {
+        updateData.specialities = JSON.parse(updateData.specialities);
+      } catch (e) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid format for specialities" });
       }
     }
 

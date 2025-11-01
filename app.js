@@ -56,6 +56,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
+      "http://localhost:3002",
       "https://frontenddd-sepia.vercel.app",
 
       "https://dashboarddd-nu.vercel.app",

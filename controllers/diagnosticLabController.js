@@ -1,4 +1,5 @@
 import DiagnosticLabs from "../models/DiagnosticLabs.js";
+import sendEmail from "../utils/sendEmail.js";
 
 // ✅ Add a new Diagnostic Lab
 export const addDiagnosticLab = async (req, res) => {
@@ -12,12 +13,35 @@ export const addDiagnosticLab = async (req, res) => {
     labData.user = req.user._id; // current authenticated user
 
     const lab = new DiagnosticLabs(labData);
-    await lab.save();
+    const savedLab = await lab.save();
+
+    // Send notification to owner
+    try {
+      const ownerEmail = process.env.OWNER_RECEIVER_EMAIL;
+      if (ownerEmail) {
+        const message = `
+          <h3>New Diagnostic Lab Added</h3>
+          <p>A new diagnostic lab has been added to the platform:</p>
+          <ul>
+            <li><strong>Name:</strong> ${savedLab.name}</li>
+            <li><strong>Location:</strong> ${savedLab.location}</li>
+            <li><strong>State:</strong> ${savedLab.state}</li>
+          </ul>
+        `;
+        await sendEmail({
+          to: ownerEmail,
+          subject: "New Diagnostic Lab Added Notification",
+          html: message,
+        });
+      }
+    } catch (emailError) {
+      console.error("Error sending owner notification email:", emailError);
+    }
 
     res.status(201).json({
       success: true,
       message: "Diagnostic Lab added successfully",
-      data: lab,
+      data: savedLab,
     });
   } catch (error) {
     console.error("Error adding lab:", error);

@@ -1,5 +1,7 @@
 import Consultation from "../models/Consultation.js";
 import DentistProfile from "../models/DentistProfile.js";
+import sendEmail from "../utils/sendEmail.js";
+import User from "../models/User.js";
 
 // ✅ Add a new consultation (booking)
 export const addConsultation = async (req, res) => {
@@ -36,6 +38,57 @@ export const addConsultation = async (req, res) => {
       message,
       consultationFee,
     });
+
+    // Send notification to patient
+    try {
+      const patientMessage = `
+        <h3>Consultation Booked Successfully</h3>
+        <p>Hello ${patientName},</p>
+        <p>Your consultation with the dentist has been successfully booked. Here are the details:</p>
+        <ul>
+          <li><strong>Date:</strong> ${new Date(
+            selectedDate
+          ).toLocaleDateString()}</li>
+          <li><strong>Slot:</strong> ${selectedSlot}</li>
+        </ul>
+        <p>You will be contacted by the clinic shortly.</p>
+      `;
+      await sendEmail({
+        to: patientEmail,
+        subject: "Consultation Booked Successfully",
+        html: patientMessage,
+      });
+    } catch (emailError) {
+      console.error("Error sending patient notification email:", emailError);
+    }
+
+    // Send notification to dentist
+    try {
+      const dentistUser = await User.findById(dentistExists.user);
+      if (dentistUser && dentistUser.email) {
+        const dentistMessage = `
+          <h3>New Consultation Booked</h3>
+          <p>Hello Dr. ${dentistUser.name},</p>
+          <p>A new consultation has been booked with you. Here are the details:</p>
+          <ul>
+            <li><strong>Patient Name:</strong> ${patientName}</li>
+            <li><strong>Patient Email:</strong> ${patientEmail}</li>
+            <li><strong>Patient Phone:</strong> ${patientPhone}</li>
+            <li><strong>Date:</strong> ${new Date(
+              selectedDate
+            ).toLocaleDateString()}</li>
+            <li><strong>Slot:</strong> ${selectedSlot}</li>
+          </ul>
+        `;
+        await sendEmail({
+          to: dentistUser.email,
+          subject: "New Consultation Booked",
+          html: dentistMessage,
+        });
+      }
+    } catch (emailError) {
+      console.error("Error sending dentist notification email:", emailError);
+    }
 
     res.status(201).json({
       success: true,

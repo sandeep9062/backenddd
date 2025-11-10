@@ -39,6 +39,25 @@ export const createAppointment = async (req, res) => {
       await sendEmail(emailData);
     }
 
+    // Send email to the patient
+    if (appointment.email) {
+      const patientEmailData = {
+        to: appointment.email,
+        subject: "Appointment Booked Successfully",
+        html: `
+          <h1>Appointment Booked Successfully</h1>
+          <p>Hello ${appointment.fullName},</p>
+          <p>Your appointment has been successfully booked. Here are the details:</p>
+          <ul>
+            <li><strong>Date:</strong> ${appointment.appointmentDate.toDateString()}</li>
+            <li><strong>Time:</strong> ${appointment.timeSlot}</li>
+          </ul>
+          <p>You will be contacted by the clinic shortly.</p>
+        `,
+      };
+      await sendEmail(patientEmailData);
+    }
+
     res.status(201).json({
       success: true,
       message: "Appointment booked successfully",

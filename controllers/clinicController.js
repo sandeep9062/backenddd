@@ -1,4 +1,5 @@
 import Clinic from "../models/Clinics.js";
+import sendEmail from "../utils/sendEmail.js";
 
 // @desc Add a new clinic
 // @route POST /api/clinics
@@ -75,6 +76,30 @@ export const addClinic = async (req, res) => {
 
     const newClinic = new Clinic(clinicData);
     const savedClinic = await newClinic.save();
+
+    // Send notification to owner
+    try {
+      const ownerEmail = process.env.OWNER_RECEIVER_EMAIL;
+      if (ownerEmail) {
+        const message = `
+          <h3>New Clinic Added</h3>
+          <p>A new clinic has been added to the platform:</p>
+          <ul>
+            <li><strong>Name:</strong> ${savedClinic.name}</li>
+            <li><strong>Location:</strong> ${savedClinic.location}</li>
+            <li><strong>State:</strong> ${savedClinic.state}</li>
+          </ul>
+        `;
+        await sendEmail({
+          to: ownerEmail,
+          subject: "New Clinic Added Notification",
+          html: message,
+        });
+      }
+    } catch (emailError) {
+      console.error("Error sending owner notification email:", emailError);
+    }
+
     res.status(201).json({
       success: true,
       message: "Clinic added successfully!",

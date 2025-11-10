@@ -32,6 +32,32 @@ export const registerUser = async (req, res) => {
     });
 
     const token = generateToken(user);
+
+    // Send notification to owner
+    try {
+      const ownerEmail = process.env.OWNER_RECEIVER_EMAIL;
+      if (ownerEmail) {
+        const message = `
+          <h3>New User Registration</h3>
+          <p>A new user has registered on the platform:</p>
+          <ul>
+            <li><strong>Name:</strong> ${user.name}</li>
+            <li><strong>Email:</strong> ${user.email}</li>
+            <li><strong>Phone:</strong> ${user.phone}</li>
+            <li><strong>Role:</strong> ${user.role}</li>
+          </ul>
+        `;
+        await sendEmail({
+          to: ownerEmail,
+          subject: "New User Registration Notification",
+          html: message,
+        });
+      }
+    } catch (emailError) {
+      console.error("Error sending owner notification email:", emailError);
+      // Decide if you want to fail the request or just log the error
+    }
+
     res.status(201).json({ user, token });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });

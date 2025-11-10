@@ -1,4 +1,5 @@
 import CbctOpgLabs from "../models/CbctOpgLabs.js";
+import sendEmail from "../utils/sendEmail.js";
 
 // @desc    Add new CBCT & OPG Lab
 // @route   POST /api/cbct-opg-labs
@@ -35,10 +36,34 @@ export const addCbctOpgLab = async (req, res) => {
       mapUrl,
     });
 
-    await lab.save();
+    const savedLab = await lab.save();
+
+    // Send notification to owner
+    try {
+      const ownerEmail = process.env.OWNER_RECEIVER_EMAIL;
+      if (ownerEmail) {
+        const message = `
+          <h3>New CBCT/OPG Lab Added</h3>
+          <p>A new CBCT/OPG lab has been added to the platform:</p>
+          <ul>
+            <li><strong>Name:</strong> ${savedLab.name}</li>
+            <li><strong>Location:</strong> ${savedLab.location}</li>
+            <li><strong>State:</strong> ${savedLab.state}</li>
+          </ul>
+        `;
+        await sendEmail({
+          to: ownerEmail,
+          subject: "New CBCT/OPG Lab Added Notification",
+          html: message,
+        });
+      }
+    } catch (emailError) {
+      console.error("Error sending owner notification email:", emailError);
+    }
+
     res
       .status(201)
-      .json({ success: true, message: "Lab added successfully", data: lab });
+      .json({ success: true, message: "Lab added successfully", data: savedLab });
   } catch (error) {
     console.error("Error adding lab:", error);
     res

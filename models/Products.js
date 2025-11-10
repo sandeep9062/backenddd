@@ -65,6 +65,21 @@ const productSchema = new mongoose.Schema(
       trim: true,
     },
 
+    uses: {
+      type: String,
+      trim: true,
+    },
+
+    advantages: {
+      type: [String],
+      default: [],
+    },
+
+    disadvantages: {
+      type: [String],
+      default: [],
+    },
+
     composition: {
       type: String,
       trim: true,

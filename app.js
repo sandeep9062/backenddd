@@ -57,9 +57,9 @@ app.use(
       "http://localhost:3000",
       "http://localhost:3001",
       "http://localhost:3002",
-      "https://frontenddd-sepia.vercel.app",
 
-      "https://dashboarddd-nu.vercel.app",
+      "https://frontenddd-topaz.vercel.app",
+      "https://dashboarddd-fawn.vercel.app",
     ],
     credentials: true,
   })
@@ -101,16 +101,9 @@ app.use("/api/plans", planRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/v1/consultations", consultationRoutes);
 
-
 app.use("/api/v1/popup-form", popupformRoutes);
 
 app.use("/api/v1/products", productRoutes);
-
-
-
-
-
-
 
 app.use("/api/payment", paymentRoutes);
 // Start server

@@ -58,7 +58,10 @@ app.use(
       "http://localhost:3000",
       "http://localhost:3001",
       "http://localhost:3002",
+
+      'https://dental-dashboard-tau.vercel.app' ,
       "https://dental-dashboard-tau.vercel.app/",
+      
       "https://frontenddd-topaz.vercel.app",
       "https://dashboarddd-fawn.vercel.app",
     ],

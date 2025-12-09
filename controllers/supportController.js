@@ -1,4 +1,5 @@
 import SupportRequest from "../models/SupportRequest.js";
+import Notification from "../models/Notification.js";
 
 export const createSupportRequest = async (req, res) => {
   try {
@@ -20,6 +21,11 @@ export const createSupportRequest = async (req, res) => {
     });
 
     await newSupportRequest.save();
+
+    // Create a notification
+    await Notification.create({
+      text: `New support request from ${req.body.name}`,
+    });
 
     res.status(201).json({
       success: true,

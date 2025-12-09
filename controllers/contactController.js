@@ -1,5 +1,6 @@
 import ContactUS from "../models/Contact_US.js";
 import sendEmail from "../utils/sendEmail.js";
+import Notification from "../models/Notification.js";
 
 // ✅ Create Contact Message
 export const createContact = async (req, res) => {
@@ -9,6 +10,12 @@ export const createContact = async (req, res) => {
     // ✅ Save contact to DB
     const contact = new ContactUS({ name, email, message });
     await contact.save();
+
+    // Create a notification
+    const notification = new Notification({
+      text: `New contact from ${name}`,
+    });
+    await notification.save();
 
     // Send email notification
     await sendEmail({

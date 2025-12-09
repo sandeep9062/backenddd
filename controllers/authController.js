@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import Notification from "../models/Notification.js";
 import crypto from "crypto";
 import axios from "axios";
 
@@ -35,6 +36,9 @@ export const registerUser = async (req, res) => {
 
     // Send notification to owner
     try {
+      await Notification.create({
+        text: `New user registered: ${user.name}`,
+      });
       const ownerEmail = process.env.OWNER_RECEIVER_EMAIL;
       if (ownerEmail) {
         const message = `

@@ -36,6 +36,7 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 
 import popupformRoutes from "./routes/popUpFormRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 connectDB();
 
@@ -57,7 +58,7 @@ app.use(
       "http://localhost:3000",
       "http://localhost:3001",
       "http://localhost:3002",
-
+      "https://dental-dashboard-tau.vercel.app/",
       "https://frontenddd-topaz.vercel.app",
       "https://dashboarddd-fawn.vercel.app",
     ],
@@ -106,6 +107,8 @@ app.use("/api/v1/popup-form", popupformRoutes);
 app.use("/api/v1/products", productRoutes);
 
 app.use("/api/payment", paymentRoutes);
+app.use("/api/v1/notifications", notificationRoutes);
+
 // Start server
 app.listen(PORT, () => {
   console.log(`✅ Server Running at http://localhost:${PORT}`);

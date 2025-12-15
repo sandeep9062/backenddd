@@ -1,4 +1,4 @@
-const FinancialData = require("../models/FinancialData");
+import FinancialData from "../models/FinancialData.js";
 
 // Helper function to calculate percentage growth
 const calculateGrowth = (current, previous) => {
@@ -165,7 +165,7 @@ const updateFinancialData = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   createFinancialData,
   getFinancialDataByMonth,
   getAllFinancialData,

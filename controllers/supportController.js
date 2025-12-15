@@ -5,7 +5,7 @@ export const createSupportRequest = async (req, res) => {
   try {
     const { name, email, phone, subject, message } = req.body;
 
-    if (!name || !email || !subject || !message) {
+    if (!name || !email || !phone || !subject || !message) {
       return res.status(400).json({
         success: false,
         message: "Please provide all required fields.",
@@ -54,21 +54,14 @@ export const getAllSupportRequests = async (req, res) => {
   }
 };
 
-export const updateSupportRequestStatus = async (req, res) => {
+export const updateSupportRequest = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
-
-    if (!status) {
-      return res.status(400).json({
-        success: false,
-        message: "Please provide a status.",
-      });
-    }
+    const { status, whoHelpedResolve, actionTaken, customerSatisfaction } = req.body;
 
     const updatedSupportRequest = await SupportRequest.findByIdAndUpdate(
       id,
-      { status },
+      { status, whoHelpedResolve, actionTaken, customerSatisfaction },
       { new: true }
     );
 
@@ -81,13 +74,13 @@ export const updateSupportRequestStatus = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Support request status updated successfully.",
+      message: "Support request updated successfully.",
       data: updatedSupportRequest,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Failed to update support request status.",
+      message: "Failed to update support request.",
       error: error.message,
     });
   }

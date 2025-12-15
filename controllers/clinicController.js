@@ -22,56 +22,82 @@ export const addClinic = async (req, res) => {
       rating,
       appointmentCharges,
       noOfDoctors,
+      numberOfDoctors,
       website,
       whatsapp,
       instagramId,
       mapUrl,
       isActive,
+      phoneNumbers,
+      subscribedPlans,
+      areasServed,
+      mainDoctorContact,
+      bestTimeToConnect,
+      socialMediaLinks,
     } = req.body;
 
-    // Ensure 'problems' is an array
-    if (!problems) {
-      problems = [];
-    } else if (typeof problems === "string") {
-      problems = [problems];
-    }
+    // Helper function to parse JSON strings
+    const parseJsonIfString = (data) => {
+      if (typeof data === 'string') {
+        try {
+          return JSON.parse(data);
+        } catch (e) {
+          return data;
+        }
+      }
+      return data;
+    };
 
-    if (!offers) {
-      offers = [];
-    } else if (typeof offers === "string") {
-      offers = [offers];
-    }
-
-    if (!specialities) {
-      specialities = [];
-    } else if (typeof specialities === "string") {
-      specialities = [specialities];
-    }
+    // Parse array and object fields
+    problems = parseJsonIfString(problems) || [];
+    offers = parseJsonIfString(offers) || [];
+    specialities = parseJsonIfString(specialities) || [];
+    phoneNumbers = parseJsonIfString(phoneNumbers) || [];
+    subscribedPlans = parseJsonIfString(subscribedPlans) || [];
+    areasServed = parseJsonIfString(areasServed) || [];
+    mainDoctorContact = parseJsonIfString(mainDoctorContact) || {};
+    bestTimeToConnect = parseJsonIfString(bestTimeToConnect) || [];
+    socialMediaLinks = parseJsonIfString(socialMediaLinks) || {};
 
     const clinicData = {
       name,
       description,
       location,
       state,
-      problems: problems || [],
-      offers: offers || [],
-      specialities: specialities || [],
+      problems,
+      offers,
+      specialities,
       rating: Number(rating) || 0,
       appointmentCharges: Number(appointmentCharges) || 0,
       noOfDoctors: Number(noOfDoctors) || 0,
+      numberOfDoctors: Number(numberOfDoctors) || 0,
       website,
       whatsapp,
       instagramId,
       mapUrl,
+      phoneNumbers,
+      subscribedPlans,
+      areasServed,
+      mainDoctorContact,
+      bestTimeToConnect,
+      socialMediaLinks,
       user: req.user._id,
     };
 
     if (isActive !== undefined) {
-      clinicData.isActive = isActive === "true";
+      clinicData.isActive = isActive === "true" || isActive === true;
     }
 
     if (req.files) {
-      clinicData.images = req.files.map((file) => file.path);
+      // Handle both images and videos
+      clinicData.images = req.files
+        .filter((file) => file.fieldname === 'image' || !file.fieldname)
+        .map((file) => file.path);
+
+      const videoFiles = req.files.filter((file) => file.fieldname === 'video');
+      if (videoFiles.length > 0) {
+        clinicData.videos = videoFiles.map((file) => file.path);
+      }
     }
 
     const newClinic = new Clinic(clinicData);
@@ -194,12 +220,72 @@ export const updateClinic = async (req, res) => {
 
     const updateData = { ...req.body };
 
-    // If image files are uploaded, add their paths to the update data
+    // Helper function to parse JSON strings
+    const parseJsonIfString = (data) => {
+      if (typeof data === 'string') {
+        try {
+          return JSON.parse(data);
+        } catch (e) {
+          return data;
+        }
+      }
+      return data;
+    };
+
+    // Parse array and object fields
+    if (updateData.problems) updateData.problems = parseJsonIfString(updateData.problems);
+    if (updateData.offers) updateData.offers = parseJsonIfString(updateData.offers);
+    if (updateData.specialities) updateData.specialities = parseJsonIfString(updateData.specialities);
+    if (updateData.phoneNumbers) updateData.phoneNumbers = parseJsonIfString(updateData.phoneNumbers);
+    if (updateData.subscribedPlans) updateData.subscribedPlans = parseJsonIfString(updateData.subscribedPlans);
+    if (updateData.areasServed) updateData.areasServed = parseJsonIfString(updateData.areasServed);
+    if (updateData.mainDoctorContact) updateData.mainDoctorContact = parseJsonIfString(updateData.mainDoctorContact);
+    if (updateData.bestTimeToConnect) updateData.bestTimeToConnect = parseJsonIfString(updateData.bestTimeToConnect);
+    if (updateData.socialMediaLinks) updateData.socialMediaLinks = parseJsonIfString(updateData.socialMediaLinks);
+
+    // Handle file uploads
     if (req.files && req.files.length > 0) {
-      updateData.images = req.files.map((file) => file.path);
+      // Handle images - merge with existing ones
+      const imageFiles = req.files.filter((file) => file.fieldname === 'image' || !file.fieldname);
+      if (imageFiles.length > 0) {
+        const newImagePaths = imageFiles.map((file) => file.path);
+        // If existing images are provided in the form, use those, otherwise add to current images
+        if (req.body.existingImages) {
+          const existingImages = Array.isArray(req.body.existingImages)
+            ? req.body.existingImages
+            : [req.body.existingImages];
+          updateData.images = [...existingImages, ...newImagePaths];
+        } else {
+          updateData.images = [...(clinic.images || []), ...newImagePaths];
+        }
+      } else if (req.body.existingImages) {
+        // Only existing images provided
+        updateData.images = Array.isArray(req.body.existingImages)
+          ? req.body.existingImages
+          : [req.body.existingImages];
+      } else {
+        // No images specified, remove images field to avoid clearing them
+        delete updateData.images;
+      }
+
+      // Handle videos
+      const videoFiles = req.files.filter((file) => file.fieldname === 'video');
+      if (videoFiles.length > 0) {
+        updateData.videos = videoFiles.map((file) => file.path);
+      } else {
+        delete updateData.videos;
+      }
     } else {
-      // If no new files are uploaded, don't try to update the images with a URL string
-      delete updateData.images;
+      // No files uploaded - handle existingImages from form data
+      if (req.body.existingImages !== undefined) {
+        updateData.images = Array.isArray(req.body.existingImages)
+          ? req.body.existingImages
+          : [req.body.existingImages];
+      } else {
+        // No images specified, don't update
+        delete updateData.images;
+      }
+      delete updateData.videos;
     }
 
     // Handle boolean conversion for isActive
@@ -212,37 +298,6 @@ export const updateClinic = async (req, res) => {
     // The 'user' field should not be updated from the body, it's immutable.
     // We delete it to prevent any accidental changes. The owner is already established.
     delete updateData.user;
-
-    // If 'problems' is sent as a JSON string, parse it into an array
-    if (typeof updateData.problems === "string") {
-      try {
-        updateData.problems = JSON.parse(updateData.problems);
-      } catch (e) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Invalid format for problems" });
-      }
-    }
-
-    if (typeof updateData.offers === "string") {
-      try {
-        updateData.offers = JSON.parse(updateData.offers);
-      } catch (e) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Invalid format for offers" });
-      }
-    }
-
-    if (typeof updateData.specialities === "string") {
-      try {
-        updateData.specialities = JSON.parse(updateData.specialities);
-      } catch (e) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Invalid format for specialities" });
-      }
-    }
 
     const updatedClinic = await Clinic.findByIdAndUpdate(
       req.params.id,

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const financialDataSchema = new mongoose.Schema({
   month: {
@@ -75,4 +75,4 @@ financialDataSchema.pre('save', function(next) {
 
 const FinancialData = mongoose.model('FinancialData', financialDataSchema);
 
-module.exports = FinancialData;
+export default FinancialData;

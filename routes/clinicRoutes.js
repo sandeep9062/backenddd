@@ -6,7 +6,10 @@ import { checkAdmin, protect } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 // POST - Add a new clinic
-router.post("/", protect, upload.array("images", 3), clinicController.addClinic);
+router.post("/", protect, upload.fields([
+  { name: 'image', maxCount: 3 },
+  { name: 'video', maxCount: 1 }
+]), clinicController.addClinic);
 
 // GET - Get all clinics
 router.get("/", clinicController.getAllClinics);
@@ -18,7 +21,10 @@ router.get("/user", protect, clinicController.getClinicsByUser);
 router.get("/:id", clinicController.getClinicById);
 
 // PUT - Update clinic
-router.put("/:id", protect, upload.array("images",3), clinicController.updateClinic);
+router.put("/:id", protect, upload.fields([
+  { name: 'image', maxCount: 3 },
+  { name: 'video', maxCount: 1 }
+]), clinicController.updateClinic);
 
 // DELETE - Delete clinic
 router.delete("/:id", protect, checkAdmin, clinicController.deleteClinic);

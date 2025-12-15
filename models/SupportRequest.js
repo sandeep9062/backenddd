@@ -15,7 +15,7 @@ const supportRequestSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
     subject: {
@@ -26,6 +26,22 @@ const supportRequestSchema = new mongoose.Schema(
     message: {
       type: String,
       required: true,
+    },
+    whoHelpedResolve: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    actionTaken: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    customerSatisfaction: {
+      type: String,
+      enum: ["Yes", "No", "N/A"],
+      default: "N/A",
+      required: false,
     },
     status: {
       type: String,

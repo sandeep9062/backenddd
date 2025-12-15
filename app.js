@@ -37,6 +37,7 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 import popupformRoutes from "./routes/popUpFormRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import financialRoutes from "./routes/financialRoutes.js";
 
 connectDB();
 
@@ -111,6 +112,7 @@ app.use("/api/v1/products", productRoutes);
 
 app.use("/api/payment", paymentRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/financial", financialRoutes);
 
 // Start server
 app.listen(PORT, () => {
